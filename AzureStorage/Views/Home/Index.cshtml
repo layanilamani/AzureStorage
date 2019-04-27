@@ -1,0 +1,44 @@
+﻿@using Microsoft.WindowsAzure.Storage.Blob
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<h2>Blobs</h2>
+
+@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label>Container</label>
+        <input class="form-control" type="text" name="container" value="aptech" />
+    </div>
+
+    <div class="form-group">
+        <label>Select File</label>
+        <input class="form-control" type="file" name="file" value="" />
+    </div>
+    <div class="form-group">
+        <input class="btn btn-default btn-primary" type="submit" name="name" value="Upload" />
+    </div>
+}
+<hr />
+<table class="table">
+
+    <thead>
+        <tr><th>Blob</th><th>Size(KB)</th><th></th></tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in (List<CloudBlockBlob>)ViewBag.blobs)
+        {
+
+            var blobsize = item.Properties.Length / 1024;
+
+            <tr>
+                <td><a href="@item.Uri.ToString()">@item.Name</a> </td>
+                <td>@blobsize</td>
+                <td><a href="@Url.Action("Delete", new { blob = item.Name })">Delete</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
